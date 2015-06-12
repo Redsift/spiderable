@@ -1,3 +1,6 @@
+/* global UI */
+/* global Meteor */
+/* global Spiderable */
 // We want to provide a deteriministic indicator of when the page is 'done'
 // This is non-trivial: e.g. an infinite stream of tweets is never done.
 //
@@ -14,6 +17,10 @@
 // We set this 'started' flag as Package.spiderable.Spiderable._initialSubscriptionsStarted
 // This is used by our phantomjs to determine when the subscriptions are started;
 // it then polls until all subscriptions are ready.
+
+Spiderable.isPhantom = function() {
+  return ((window.phantom !== undefined) || (window._phantom !== undefined));
+};
 
 Spiderable._initialSubscriptionsStarted = false;
 
@@ -44,8 +51,9 @@ Meteor.startup(function () {
 
 });
 
+
 UI.registerHelper('isPhantom', function (object) {
-  return ((window.phantom !== undefined) || (window._phantom !== undefined));
+  return Spiderable.isPhantom();
 });  
 
 Spiderable._isReady = true;

@@ -1,5 +1,6 @@
 // 'url' is assigned to in a statement before this.
 var page = require('webpage').create();
+var stderr = require('system').stderr;
 
 var isReady = function () {
   return page.evaluate(function () {
@@ -27,7 +28,7 @@ var dumpPageContent = function () {
   var out = page.content;
   out = out.replace(/<script[^>]+>(.|\n|\r)*?<\/script\s*>/ig, '');
   out = out.replace('<meta name="fragment" content="!">', '');
-  console.log('[dump]', out);
+  console.log(out);
 };
 
 page.open(url, function(status) {
@@ -37,13 +38,13 @@ page.open(url, function(status) {
 
 page.onConsoleMessage = function(msg, lineNum, sourceId) {
   // lineNum and sourceId are not set
-  console.log('[page]', msg);
+  stderr.write('[page] ' + msg);
 };
 
 page.onError = function (msg, trace) {
-    console.error('[adas]', msg);
+    stderr.write('[error]' + msg);
     trace.forEach(function(item) {
-        console.error('  ', item.file, ':', item.line);
+        stderr.write('  ' + item.file + ':' + item.line);
     });
 };
 

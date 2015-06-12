@@ -106,7 +106,6 @@ WebApp.connectHandlers.use(function (req, res, next) {
 
     var filename = '/tmp/meteor_'+crypto.randomBytes(4).readUInt32LE(0);
     fs.writeFileSync(filename, phantomScript);
-    console.log('checking...' , filename);
     var phantom = child_process.execFile(
       '/bin/bash',
       ['-c',
@@ -123,7 +122,7 @@ WebApp.connectHandlers.use(function (req, res, next) {
           if (error && error.code === 127)
             Meteor._debug("spiderable: phantomjs not installed. Download and install from http://phantomjs.org/");
           else
-            Meteor._debug("spiderable: phantomjs failed:", error);
+            Meteor._debug("spiderable: phantomjs failed:");
   	     
           if (true) {
               res.writeHead(500, {'Content-Type': 'text/plain; charset=UTF-8'});
@@ -134,9 +133,6 @@ WebApp.connectHandlers.use(function (req, res, next) {
         }
       }));
       
-      phantom.stdout.on('data', function(buf) {
-        console.log('[phantomjs] %s', String(buf).trim());
-      });
       phantom.stderr.on('data', function(buf) {
         console.error('[phantomjs] %s', String(buf).trim());
       });
