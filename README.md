@@ -1,4 +1,18 @@
-`meteor add ongoworks:spiderable`
+`meteor add redsift:spiderable`
 
-#spiderable
-Uses port as set in meteor port and /tmp/ files instead of `/dev/stdin`
+#Spiderable
+
+Forked from ongoworks:spiderable and includes console logs from Phantom, Iron Router support for data and fixes.
+
+##UI Helper to check if rendering is in PhantomJS
+
+	{{#if isPhantom}}
+	Rendered in PhantomJS
+	{{else}}
+	Not rendered in PhantomJS
+	{{/if}}
+	
+
+## Iron Router
+
+When used with Iron Router it will wait on data subscriptions.

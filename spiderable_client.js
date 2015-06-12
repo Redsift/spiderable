@@ -27,4 +27,37 @@ var topLevelCodeDone = function () {
   Meteor._setImmediate(function () { startupCallbacksDone(); });
 };
 
-Meteor.startup(function () { topLevelCodeDone(); });
+Meteor.startup(function () { 
+  
+  topLevelCodeDone(); 
+
+
+  if (Meteor.isClient && Router) {
+    Router.onBeforeAction(function() {
+  			Spiderable.resetReady(this.ready());
+  			this.next();	
+  		});
+    Router.onAfterAction(function() {
+  			Spiderable.resetReady(this.ready());
+  		});
+  }
+
+});
+
+UI.registerHelper('isPhantom', function (object) {
+  return ((window.phantom !== undefined) || (window._phantom !== undefined));
+});  
+
+Spiderable._isReady = true;
+
+Spiderable.resetReady = function(to) {
+  if (to === undefined) {
+    to = false;
+  }
+  Spiderable._isReady = to;
+};
+
+Spiderable.isReady = function() {
+  return  Spiderable._isReady;
+};
+

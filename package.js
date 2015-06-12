@@ -1,12 +1,12 @@
 Package.describe({
-  name: "ongoworks:spiderable",
-  summary: "Docker + Port friendly Spiderable package",
-  version: "1.0.7",
-  git: "https://github.com/ongoworks/spiderable"
+  name: "redsift:spiderable",
+  summary: "Docker + Port friendly Spiderable package with debug and wait states",
+  version: "1.0.8",
+  git: "https://github.com/redsift/spiderable"
 });
 
 Package.on_use(function (api) {
-  api.versionsFrom("METEOR@0.9.0");
+  api.versionsFrom('1.1.0.2');
   api.use('webapp', 'server');
   api.use(['templating'], 'client');
   api.use(['underscore'], ['client', 'server']);

@@ -106,12 +106,13 @@ WebApp.connectHandlers.use(function (req, res, next) {
 
     var filename = '/tmp/meteor_'+crypto.randomBytes(4).readUInt32LE(0);
     fs.writeFileSync(filename, phantomScript);
-    child_process.execFile(
+    console.log('checking...' , filename);
+    var phantom = child_process.execFile(
       '/bin/bash',
       ['-c',
        ("exec phantomjs --load-images=no --ignore-ssl-errors=yes " + filename)],
       {timeout: REQUEST_TIMEOUT, maxBuffer: MAX_BUFFER},
-      function (error, stdout, stderr) {
+      Meteor.bindEnvironment(function (error, stdout, stderr) {
         fs.unlink(filename);
         if (!error && /<html/i.test(stdout)) {
           res.writeHead(200, {'Content-Type': 'text/html; charset=UTF-8'});
@@ -122,11 +123,24 @@ WebApp.connectHandlers.use(function (req, res, next) {
           if (error && error.code === 127)
             Meteor._debug("spiderable: phantomjs not installed. Download and install from http://phantomjs.org/");
           else
-            Meteor._debug("spiderable: phantomjs failed:", error, "\nstderr:", stderr);
-
-          next();
+            Meteor._debug("spiderable: phantomjs failed:", error);
+  	     
+          if (true) {
+              res.writeHead(500, {'Content-Type': 'text/plain; charset=UTF-8'});
+              res.end("spiderable: phantomjs failed");
+          } else {   
+              next();            
+          }
         }
+      }));
+      
+      phantom.stdout.on('data', function(buf) {
+        console.log('[phantomjs] %s', String(buf).trim());
       });
+      phantom.stderr.on('data', function(buf) {
+        console.error('[phantomjs] %s', String(buf).trim());
+      });
+      
   } else {
     next();
   }
